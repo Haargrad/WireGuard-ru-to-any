@@ -17,20 +17,34 @@ sudo ./wireguard-install.sh
 
 #### 2. Creating a script with automatic connection and adding routes for networks in the .RU segment
 
-iptables -t nat -A POSTROUTING -j MASQUERADE
-echo nameserver 1.1.1.1 > /etc/resolv.conf
-curl https://ipv4.fetus.jp/ru.txt > ru.txt
-tail -n +12 /root/ru.txt > /root/routes
-ip -4 route add 172.16.0.0/12 via 172.17.203.254 dev ens160
-wg-quick up kz
-arr=()
+connect.sh script description
+
+iptables -t nat -A POSTROUTING -j MASQUERADE - enabling NAT
+
+echo nameserver 1.1.1.1 > /etc/resolv.conf - add nameserver
+
+curl https://ipv4.fetus.jp/ru.txt > ru.txt - get a list of ip addresses in russia
+
+tail -n +12 /root/ru.txt > /root/routes trim the extra 12 lines
+
+ip -4 route add 172.16.0.0/12 via 172.17.203.254 dev ens160 - add default route for all local networks
+
+wg-quick up kz - enable wireguard
+
+arr=() add all routes in Russia
+
 while IFS= read -r line; do
+
    arr+=("$line")
+
 done < /root/routes
 
 for ((i=0;i<${#arr[@]};i++))
+
 do
+
  ip -4 route add ${arr[$i]} via 172.17.203.254 dev ens160
+
 done
 
 #### 3. Create systemd unit 
