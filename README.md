@@ -19,19 +19,19 @@ sudo ./wireguard-install.sh
 
 connect.sh script description
 
-iptables -t nat -A POSTROUTING -j MASQUERADE - enabling NAT
+iptables -t nat -A POSTROUTING -j MASQUERADE #enabling NAT
 
-echo nameserver 1.1.1.1 > /etc/resolv.conf - add nameserver
+echo nameserver 1.1.1.1 > /etc/resolv.conf #add nameserver
 
-curl https://ipv4.fetus.jp/ru.txt > ru.txt - get a list of ip addresses in russia
+curl https://ipv4.fetus.jp/ru.txt > ru.txt #get a list of ip addresses in russia
 
-tail -n +12 /root/ru.txt > /root/routes trim the extra 12 lines
+tail -n +12 /root/ru.txt > /root/routes #trim the extra 12 lines
 
-ip -4 route add 172.16.0.0/12 via 172.17.203.254 dev ens160 - add default route for all local networks
+ip -4 route add 172.16.0.0/12 via 172.17.203.254 dev ens160 #add default route for all local networks
 
-wg-quick up kz - enable wireguard
+wg-quick up kz #enable wireguard
 
-arr=() add all routes in Russia
+arr=() #add all routes in Russia
 
 while IFS= read -r line; do
 
@@ -69,3 +69,6 @@ WantedBy=multi-user.target
 ```bash
 sudo systemctl enable --now wg.service
 ```
+
+#### you can use delete.sh to remove all routes and settings
+
